@@ -83,6 +83,7 @@ fun EventDispatcher.registerKotlinListener(x :(MessageReceivedEvent) -> Unit){
 
 
 fun startRest() {
+    port(5678)
     put("/fcps"){req,_ ->
         val body = req.body()
         val obj = Utils.gson.fromJson(body,JsonObject::class.java)
