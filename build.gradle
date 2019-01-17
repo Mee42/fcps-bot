@@ -29,6 +29,12 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'systems.carson.Main'
+    }
+}
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }

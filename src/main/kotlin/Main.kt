@@ -1,3 +1,5 @@
+package systems.carson
+
 import com.google.gson.annotations.SerializedName
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
@@ -14,8 +16,18 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 
+
+class Main{
+    companion object {
+        @JvmStatic
+        fun main(args :Array<String>){
+            mainf(args)
+        }
+    }
+}
+
 lateinit var client : IDiscordClient
-fun main(args: Array<String>) {
+fun mainf(args: Array<String>) {
     startRest()
     client = Utils.buildClient()
     client.login()
