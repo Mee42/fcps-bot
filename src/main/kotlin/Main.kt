@@ -13,6 +13,7 @@ import spark.Spark.*
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.api.events.EventDispatcher
 import sx.blah.discord.api.events.EventSubscriber
+import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 
@@ -56,7 +57,16 @@ fun mainf(args: Array<String>) {
 
             }
 
-
+        } else if (event.message.content == "fcps-stats" || event.message.content == "fcps-status"){
+            println("called fcps-stats")
+            RequestBuffer.request {
+                event.channel.sendMessage(EmbedBuilder()
+                    .withTitle("FCPS-BOT status message")
+                    .withDesc("Mainly for bot dev'ing")
+                    .appendField("Subscribed channels:",mongo.getCollection().find().count().toString(),false)
+                    .withFooterText("Thanks to Dhruv for the api")
+                    .build())
+            }
         }
         Unit
     }
