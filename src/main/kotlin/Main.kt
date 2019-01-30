@@ -16,6 +16,8 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class Main{
@@ -87,15 +89,12 @@ fun startRest() {
     put("/fcps"){req,_ ->
         val body = req.body()
         val obj = Utils.gson.fromJson(body,JsonObject::class.java)
-        if(obj.status == Status.ERROR){
-            halt(500,"Unable to parse json, or got status = ERROR")
-        }
+        val date = SimpleDateFormat("EEE, MMM d").format(Date(obj.date))
         val embed = EmbedBuilder()
             .appendField("Students",obj.students.toStatusString(),false)
             .appendField("School Offices",obj.schoolOffices.toStatusString(),false)
             .appendField("Central Offices",obj.centralOffices.toStatusString(),false)
-            .withTitle("FCPS School cancellation broadcast")
-            .withDesc(if(obj.humanVerified) "This data has been human verified" else "This data has not been human verified")
+            .withTitle("FCPS School cancellation broadcast for `$date`")
             .withFooterText("To unsubscribe from these notifications, use fcps-unsub")
             .build()
         var i = 0
@@ -109,7 +108,7 @@ fun startRest() {
 
         """
 {
-    messagesSent = $i
+    messagesSent: $i
 }
         """.trimIndent()
     }
@@ -130,14 +129,11 @@ fun Int.toStatusString() :String{
 "centralOffices":(int central offices status)}
  */
 data class JsonObject(
-    val status :Status = Status.ERROR,
-    @SerializedName("human")
-    val humanVerified :Boolean = false,
     val students :Int = -1,
     val schoolOffices :Int = -1,
-    val centralOffices :Int = -1)
+    val centralOffices :Int = -1,
+    val date: Long = -1)
 
-enum class Status{SUCCESS, ERROR}
 
 val mongo = Mongo()
 class Mongo {
